@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Encuesta — Red de Prestadores Turísticos · Esquina 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Serif:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul: #0e5a9e;
+    --azul-dark: #0a4278;
+    --azul-light: #e8f0f9;
+    --azul-mid: #ccdff2;
+    --ocre: #b8863d;
+    --ocre-light: #faf3e8;
+    --paper: #f8f5ee;
+    --paper2: #efe9df;
+    --ink: #1a1612;
+    --muted: #7a7068;
+    --border: #ddd5c8;
+    --verde: #2e7d4f;
+    --verde-light: #e5f3eb;
+    --rojo: #b33a2a;
+    --rojo-light: #fbeae8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+  header { background: var(--azul); color: var(--paper); padding: 2.5rem 1.5rem 2rem; }
+  .header-inner { max-width: 680px; margin: 0 auto; }
+  .header-label { font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(248,245,238,0.55); margin-bottom: 0.75rem; font-family: 'IBM Plex Mono', monospace; }
+  .header-inner h1 { font-family: 'IBM Plex Serif', serif; font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 600; line-height: 1.15; margin-bottom: 0.5rem; }
+  .header-inner h1 span { color: #8fc4e8; }
+  .header-sub { font-size: 13px; color: rgba(248,245,238,0.6); font-weight: 300; line-height: 1.6; margin-top: 0.5rem; }
+  .progress-wrap { margin-top: 1.5rem; display: flex; align-items: center; gap: 10px; }
+  .progress-track { flex: 1; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #8fc4e8; border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+  .progress-label { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: rgba(248,245,238,0.6); white-space: nowrap; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .seccion { display: none; animation: fadeIn 0.25s ease; }
+  .seccion.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .seccion-label { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--azul); font-family: 'IBM Plex Mono', monospace; margin-bottom: 0.35rem; }
+  .seccion-titulo { font-family: 'IBM Plex Serif', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; line-height: 1.3; }
+  .seccion-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+
+  /* BIENVENIDA */
+  .bienvenida-bloque { background: var(--azul); color: var(--paper); border-radius: 8px; padding: 1.75rem; margin-bottom: 1.5rem; }
+  .bienvenida-bloque h2 { font-family: 'IBM Plex Serif', serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.6rem; line-height: 1.3; }
+  .bienvenida-bloque h2 span { color: #8fc4e8; }
+  .bienvenida-bloque p { font-size: 13px; color: rgba(248,245,238,0.8); line-height: 1.7; margin-bottom: 1.25rem; }
+  .beneficios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media (max-width: 480px) { .beneficios-grid { grid-template-columns: 1fr; } }
+  .beneficio-item { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 8px; }
+  .beneficio-icono { font-size: 13px; flex-shrink: 0; margin-top: 2px; color: #8fc4e8; }
+  .beneficio-texto { font-size: 12px; color: rgba(248,245,238,0.85); line-height: 1.45; }
+  .beneficio-texto strong { display: block; color: #fff; font-weight: 500; margin-bottom: 1px; font-size: 12px; }
+
+  .bienvenida-nota { background: var(--ocre-light); border: 1px solid rgba(184,134,61,0.3); border-left: 3px solid var(--ocre); border-radius: 6px; padding: 12px 14px; font-size: 12px; color: #5a3a18; line-height: 1.65; margin-bottom: 1.5rem; }
+  .bienvenida-tiempo { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); margin-bottom: 1.5rem; }
+  .tiempo-pip { width: 6px; height: 6px; background: var(--verde); border-radius: 50%; flex-shrink: 0; }
+
+  /* CAMPOS */
+  .campo { margin-bottom: 1.25rem; }
+  label { display: block; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 5px; line-height: 1.4; }
+  label .req { color: var(--azul); margin-left: 2px; }
+  .hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; line-height: 1.5; font-style: italic; }
+
+  input[type="text"], input[type="email"], input[type="tel"],
+  input[type="number"], input[type="url"], select, textarea {
+    width: 100%; padding: 10px 12px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;
+    color: var(--ink); background: #fff; border: 1px solid var(--border); border-radius: 4px;
+    outline: none; transition: border-color 0.15s, box-shadow 0.15s; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(14,90,158,0.1); }
+  input.error, select.error, textarea.error { border-color: var(--rojo); box-shadow: 0 0 0 3px rgba(179,58,42,0.08); }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7068' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+  .error-msg { font-size: 11px; color: var(--rojo); margin-top: 4px; display: none; }
+  .error-msg.visible { display: block; }
+
+  /* ESCALA 1-5 */
+  .escala-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .escala-opcion { display: none; }
+  .escala-label { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 52px; height: 52px; background: #fff; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.12s; font-size: 18px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; color: var(--muted); }
+  .escala-label:hover { border-color: var(--azul); color: var(--azul); background: var(--azul-light); }
+  .escala-opcion:checked + .escala-label { background: var(--azul); border-color: var(--azul); color: #fff; }
+  .escala-desc { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--muted); font-style: italic; }
+
+  /* OPCIONES */
+  .opciones { display: flex; flex-direction: column; gap: 6px; }
+  .opcion { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: #fff; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: border-color 0.12s, background 0.12s; user-select: none; }
+  .opcion:hover { border-color: var(--azul-mid); background: var(--azul-light); }
+  .opcion.selected { border-color: var(--azul); background: var(--azul-light); }
+  .opcion input[type="radio"], .opcion input[type="checkbox"] { width: 16px; height: 16px; margin-top: 1px; flex-shrink: 0; accent-color: var(--azul); cursor: pointer; }
+  .opcion-label { font-size: 13px; color: var(--ink); line-height: 1.45; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 500px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .nav-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); gap: 10px; }
+  .btn { font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 10px 22px; border-radius: 4px; border: none; cursor: pointer; transition: all 0.15s; }
+  .btn-primary { background: var(--azul); color: #fff; }
+  .btn-primary:hover { background: var(--azul-dark); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secondary { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--ink); color: var(--ink); }
+
+  .confirmacion { text-align: center; padding: 3rem 1rem; }
+  .check-circle { width: 64px; height: 64px; background: var(--verde); border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; }
+  .confirmacion h2 { font-family: 'IBM Plex Serif', serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; }
+  .confirmacion p { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 420px; margin: 0 auto 1.25rem; }
+  .confirm-proximos { background: var(--azul-light); border: 1px solid var(--azul-mid); border-radius: 6px; padding: 14px 16px; max-width: 420px; margin: 0 auto; text-align: left; }
+  .confirm-proximos strong { display: block; font-size: 12px; color: var(--azul); margin-bottom: 6px; }
+  .confirm-proximos ul { font-size: 12px; color: var(--muted); padding-left: 16px; line-height: 1.9; }
+
+  .spinner-wrap { display: none; text-align: center; padding: 2rem; }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--azul); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .envio-error { display: none; background: var(--rojo-light); border: 1px solid rgba(179,58,42,0.25); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--rojo); margin-top: 1rem; }
+
+  footer { text-align: center; padding: 2rem 1rem; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-label">Secretaría de Turismo · Municipio de Esquina · 2026</div>
+    <h1>Red de Prestadores<br><span>Turísticos Oficiales</span></h1>
+    <div class="header-sub">Encuesta de diagnóstico para prestadores habilitados.</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="progress-label" id="progress-label">Bienvenida</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- BIENVENIDA -->
+  <div class="seccion active" id="sec-0">
+    <div class="bienvenida-bloque">
+      <h2>Bienvenido/a a la <span>Red de Prestadores Turísticos Oficiales</span> de Esquina</h2>
+      <p>Tu establecimiento forma parte de esta Red en virtud de su <strong style="color:#fff">habilitación comercial municipal efectuada en 2026</strong>. Eso te da acceso a beneficios exclusivos para prestadores habilitados:</p>
+      <div class="beneficios-grid">
+        <div class="beneficio-item"><div class="beneficio-icono">★</div><div class="beneficio-texto"><strong>Sello oficial</strong>Distinción en el sitio y redes del municipio</div></div>
+        <div class="beneficio-item"><div class="beneficio-icono">◎</div><div class="beneficio-texto"><strong>Certificación</strong>Física y digital de habilitación 2026</div></div>
+        <div class="beneficio-item"><div class="beneficio-icono">◈</div><div class="beneficio-texto"><strong>Canal directo</strong>WhatsApp exclusivo con la Secretaría</div></div>
+        <div class="beneficio-item"><div class="beneficio-icono">▲</div><div class="beneficio-texto"><strong>Promoción oficial</strong>Difusión desde cuentas del municipio</div></div>
+        <div class="beneficio-item"><div class="beneficio-icono">◇</div><div class="beneficio-texto"><strong>Capacitaciones</strong>Gratuitas y exclusivas para habilitados</div></div>
+        <div class="beneficio-item"><div class="beneficio-icono">○</div><div class="beneficio-texto"><strong>Plataforma municipal</strong>Acceso prioritario al sistema de gestión</div></div>
+      </div>
+    </div>
+    <div class="bienvenida-nota">
+      Para activar estos beneficios y acompañarte mejor desde la Secretaría, necesitamos conocer tu establecimiento. Esta encuesta es el primer paso.
+    </div>
+    <div class="bienvenida-tiempo">
+      <div class="tiempo-pip"></div>
+      Lleva aproximadamente <strong style="margin: 0 4px">8 minutos</strong>. Tus respuestas son confidenciales.
+    </div>
+    <div class="nav-btns">
+      <span></span>
+      <button class="btn btn-primary" onclick="irA(1)">Comenzar encuesta →</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 1: IDENTIFICACIÓN -->
+  <div class="seccion" id="sec-1">
+    <div class="seccion-label">Sección 1 de 6</div>
+    <div class="seccion-titulo">Identificación del establecimiento</div>
+    <div class="seccion-desc">Completá los datos del establecimiento y del responsable que llena esta encuesta.</div>
+
+    <div class="campo">
+      <label for="nombre_establecimiento">Nombre del establecimiento <span class="req">*</span></label>
+      <input type="text" id="nombre_establecimiento" placeholder="Ej: Posada Casa Blanca">
+      <div class="error-msg" id="err-nombre_establecimiento">Este campo es obligatorio.</div>
+    </div>
+    <div class="campo">
+      <label for="tipo_establecimiento">Tipo de alojamiento <span class="req">*</span></label>
+      <select id="tipo_establecimiento">
+        <option value="">Seleccioná una opción…</option>
+        <option>Posada</option><option>Cabaña</option><option>Apart / Departamento</option>
+        <option>Apart Hotel</option><option>Hospedaje</option><option>Lodge de pesca</option>
+        <option>Alojamiento rural / Estancia</option><option>Otro</option>
+      </select>
+      <div class="error-msg" id="err-tipo_establecimiento">Seleccioná una opción.</div>
+    </div>
+    <div class="campo">
+      <label for="nombre_responsable">Nombre y apellido del responsable <span class="req">*</span></label>
+      <input type="text" id="nombre_responsable" placeholder="Ej: Juan Pérez">
+      <div class="error-msg" id="err-nombre_responsable">Este campo es obligatorio.</div>
+    </div>
+    <div class="grid-2">
+      <div class="campo">
+        <label for="telefono">Teléfono / WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="telefono" placeholder="Ej: 3777 123456">
+        <div class="error-msg" id="err-telefono">Este campo es obligatorio.</div>
+      </div>
+      <div class="campo">
+        <label for="email">Correo electrónico</label>
+        <div class="hint">Opcional, para recibir novedades.</div>
+        <input type="email" id="email" placeholder="correo@ejemplo.com">
+      </div>
+    </div>
+    <div class="campo">
+      <label for="direccion">Dirección del establecimiento <span class="req">*</span></label>
+      <input type="text" id="direccion" placeholder="Ej: Ruta 12 Acceso Norte, Esquina">
+      <div class="error-msg" id="err-direccion">Este campo es obligatorio.</div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="irA(0)">← Anterior</button>
+      <button class="btn btn-primary" onclick="irA(2)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: DATOS OPERATIVOS -->
+  <div class="seccion" id="sec-2">
+    <div class="seccion-label">Sección 2 de 6</div>
+    <div class="seccion-titulo">Datos operativos</div>
+    <div class="seccion-desc">Información sobre la capacidad, temporada y servicios del establecimiento.</div>
+
+    <div class="grid-2">
+      <div class="campo">
+        <label for="plazas">Cantidad de plazas <span class="req">*</span></label>
+        <input type="number" id="plazas" placeholder="Ej: 12" min="1">
+        <div class="error-msg" id="err-plazas">Ingresá un número válido.</div>
+      </div>
+      <div class="campo">
+        <label for="unidades">Habitaciones / unidades</label>
+        <input type="number" id="unidades" placeholder="Ej: 4" min="1">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Temporada de actividad <span class="req">*</span></label>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="temporada" value="Todo el año"><span class="opcion-label">Todo el año</span></label>
+        <label class="opcion"><input type="radio" name="temporada" value="Temporada de pesca (marzo–octubre)"><span class="opcion-label">Temporada de pesca (marzo–octubre)</span></label>
+        <label class="opcion"><input type="radio" name="temporada" value="Temporada alta (verano / carnaval)"><span class="opcion-label">Temporada alta (verano / carnaval)</span></label>
+        <label class="opcion"><input type="radio" name="temporada" value="Solo fines de semana y feriados"><span class="opcion-label">Solo fines de semana y feriados</span></label>
+      </div>
+      <div class="error-msg" id="err-temporada">Seleccioná una opción.</div>
+    </div>
+    <div class="campo">
+      <label>Servicios que ofrece</label>
+      <div class="hint">Marcá todos los que apliquen.</div>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" name="servicios" value="Pesca deportiva (guía + embarcación)"><span class="opcion-label">Pesca deportiva (guía + embarcación)</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="Desayuno incluido"><span class="opcion-label">Desayuno incluido</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="Pensión completa / media pensión"><span class="opcion-label">Pensión completa / media pensión</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="Restaurante o comedor propio"><span class="opcion-label">Restaurante o comedor propio</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="Piscina"><span class="opcion-label">Piscina</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="Estacionamiento"><span class="opcion-label">Estacionamiento</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="WiFi"><span class="opcion-label">WiFi</span></label>
+        <label class="opcion"><input type="checkbox" name="servicios" value="Acepta mascotas"><span class="opcion-label">Acepta mascotas</span></label>
+      </div>
+    </div>
+    <div class="campo">
+      <label for="precio_orientativo">Precio orientativo por noche (en pesos)</label>
+      <div class="hint">No es obligatorio. Nos ayuda a armar material para turistas.</div>
+      <input type="text" id="precio_orientativo" placeholder="Ej: $30.000 – $50.000">
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="irA(1)">← Anterior</button>
+      <button class="btn btn-primary" onclick="irA(3)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: PRESENCIA DIGITAL -->
+  <div class="seccion" id="sec-3">
+    <div class="seccion-label">Sección 3 de 6</div>
+    <div class="seccion-titulo">Presencia digital</div>
+    <div class="seccion-desc">Nos ayuda a mejorar la visibilidad del establecimiento en el sitio municipal y buscadores.</div>
+
+    <div class="campo"><label for="sitio_web">Sitio web propio</label><input type="url" id="sitio_web" placeholder="https://www.miposada.com.ar"></div>
+    <div class="campo"><label for="instagram">Cuenta de Instagram</label><input type="text" id="instagram" placeholder="@mi_posada"></div>
+    <div class="campo"><label for="facebook">Página de Facebook</label><input type="text" id="facebook" placeholder="facebook.com/miposada"></div>
+
+    <div class="campo">
+      <label>¿Tiene perfil en Google Maps? <span class="req">*</span></label>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="google_maps" value="Sí, y está actualizado"><span class="opcion-label">Sí, y está actualizado</span></label>
+        <label class="opcion"><input type="radio" name="google_maps" value="Sí, pero necesita actualizarse"><span class="opcion-label">Sí, pero necesita actualizarse</span></label>
+        <label class="opcion"><input type="radio" name="google_maps" value="No sé / no estoy seguro/a"><span class="opcion-label">No sé / no estoy seguro/a</span></label>
+        <label class="opcion"><input type="radio" name="google_maps" value="No tiene perfil"><span class="opcion-label">No tiene perfil en Google Maps</span></label>
+      </div>
+      <div class="error-msg" id="err-google_maps">Seleccioná una opción.</div>
+    </div>
+    <div class="campo">
+      <label>¿Usa alguna plataforma de reservas online? <span class="req">*</span></label>
+      <div class="hint">Marcá todos los que apliquen.</div>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" name="plataformas" value="Booking.com"><span class="opcion-label">Booking.com</span></label>
+        <label class="opcion"><input type="checkbox" name="plataformas" value="Airbnb"><span class="opcion-label">Airbnb</span></label>
+        <label class="opcion"><input type="checkbox" name="plataformas" value="TripAdvisor"><span class="opcion-label">TripAdvisor</span></label>
+        <label class="opcion"><input type="checkbox" name="plataformas" value="WhatsApp / teléfono directo"><span class="opcion-label">Solo por WhatsApp o teléfono (sin plataforma)</span></label>
+        <label class="opcion"><input type="checkbox" name="plataformas" value="Ninguna"><span class="opcion-label">Ninguna todavía</span></label>
+      </div>
+      <div class="error-msg" id="err-plataformas">Seleccioná al menos una opción.</div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="irA(2)">← Anterior</button>
+      <button class="btn btn-primary" onclick="irA(4)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: ESQUINA COMO DESTINO -->
+  <div class="seccion" id="sec-4">
+    <div class="seccion-label">Sección 4 de 6</div>
+    <div class="seccion-titulo">Esquina como destino turístico</div>
+    <div class="seccion-desc">Tu mirada como prestador es clave. Queremos saber qué le falta a la ciudad y con quiénes te gustaría articular.</div>
+
+    <div class="campo">
+      <label>¿Qué producto o experiencia le falta a Esquina para atraer más turistas? <span class="req">*</span></label>
+      <div class="hint">Podés elegir más de uno.</div>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Circuitos o paquetes turísticos armados"><span class="opcion-label">Circuitos o paquetes armados (pesca + gastronomía + naturaleza)</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Actividades para turistas no pescadores"><span class="opcion-label">Actividades para turistas que no vienen por la pesca</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Gastronomía local / típica"><span class="opcion-label">Gastronomía local y platos típicos del litoral</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Turismo cultural e histórico"><span class="opcion-label">Turismo cultural e histórico (patrimonio, museos, tradiciones)</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Turismo de naturaleza y avistaje de fauna"><span class="opcion-label">Turismo de naturaleza y avistaje de fauna</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Más eventos que traigan turistas"><span class="opcion-label">Más eventos y festivales que convoquen visitantes</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Mejor señalética y accesibilidad"><span class="opcion-label">Mejor señalética turística y accesibilidad</span></label>
+        <label class="opcion"><input type="checkbox" name="falta_destino" value="Más promoción digital de la ciudad"><span class="opcion-label">Más y mejor promoción digital de Esquina como destino</span></label>
+      </div>
+      <div class="error-msg" id="err-falta_destino">Seleccioná al menos una opción.</div>
+    </div>
+    <div class="campo">
+      <label for="falta_destino_otro">¿Algo más que le falta a Esquina? (opcional)</label>
+      <textarea id="falta_destino_otro" placeholder="Contanos tu idea…"></textarea>
+    </div>
+    <div class="campo">
+      <label>¿Con qué actores te gustaría articular para crear paquetes o circuitos? <span class="req">*</span></label>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" name="articulacion" value="Otros alojamientos de la Red"><span class="opcion-label">Otros alojamientos de la Red</span></label>
+        <label class="opcion"><input type="checkbox" name="articulacion" value="Restaurantes y gastronomía"><span class="opcion-label">Restaurantes y gastronomía</span></label>
+        <label class="opcion"><input type="checkbox" name="articulacion" value="Guías de pesca y excursiones"><span class="opcion-label">Guías de pesca y excursiones</span></label>
+        <label class="opcion"><input type="checkbox" name="articulacion" value="Transporte local"><span class="opcion-label">Transporte local (remises, traslados)</span></label>
+        <label class="opcion"><input type="checkbox" name="articulacion" value="Productores locales y artesanos"><span class="opcion-label">Productores locales y artesanos</span></label>
+        <label class="opcion"><input type="checkbox" name="articulacion" value="Por ahora prefiero trabajar de forma independiente"><span class="opcion-label">Por ahora prefiero trabajar de forma independiente</span></label>
+      </div>
+      <div class="error-msg" id="err-articulacion">Seleccioná al menos una opción.</div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="irA(3)">← Anterior</button>
+      <button class="btn btn-primary" onclick="irA(5)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: CAPACITACIÓN Y RELACIÓN -->
+  <div class="seccion" id="sec-5">
+    <div class="seccion-label">Sección 5 de 6</div>
+    <div class="seccion-titulo">Capacitación y relación con el municipio</div>
+    <div class="seccion-desc">Queremos diseñar capacitaciones que sirvan de verdad, y entender cómo es hoy tu vínculo con la Secretaría de Turismo.</div>
+
+    <div class="campo">
+      <label>¿Qué temas de capacitación te serían más útiles? <span class="req">*</span></label>
+      <div class="hint">Podés elegir más de uno.</div>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Marketing digital y redes sociales"><span class="opcion-label">Marketing digital y redes sociales para alojamientos</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Gestión de reservas y plataformas online"><span class="opcion-label">Gestión de reservas y uso de plataformas (Booking, Airbnb)</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Atención al turista y calidad de servicio"><span class="opcion-label">Atención al turista y calidad de servicio</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Inglés u otros idiomas para turismo"><span class="opcion-label">Inglés u otros idiomas orientados al turismo</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Gastronomía y servicios de comida"><span class="opcion-label">Gastronomía típica y servicios de comida para huéspedes</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Fotografía para promoción del establecimiento"><span class="opcion-label">Fotografía para promoción del establecimiento</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Gestión financiera y precios"><span class="opcion-label">Gestión financiera, fijación de precios y rentabilidad</span></label>
+        <label class="opcion"><input type="checkbox" name="capacitacion" value="Trámites y habilitaciones municipales"><span class="opcion-label">Trámites y habilitaciones municipales</span></label>
+      </div>
+      <div class="error-msg" id="err-capacitacion">Seleccioná al menos una opción.</div>
+    </div>
+    <div class="campo">
+      <label>¿Qué formato de capacitación preferís? <span class="req">*</span></label>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="formato_cap" value="Presencial (jornada o taller)"><span class="opcion-label">Presencial — jornada o taller</span></label>
+        <label class="opcion"><input type="radio" name="formato_cap" value="Virtual (Zoom / Meet)"><span class="opcion-label">Virtual por videollamada (Zoom / Meet)</span></label>
+        <label class="opcion"><input type="radio" name="formato_cap" value="Materiales para estudiar a mi ritmo"><span class="opcion-label">Materiales escritos o videos para estudiar a mi ritmo</span></label>
+        <label class="opcion"><input type="radio" name="formato_cap" value="Cualquier formato"><span class="opcion-label">Me da igual, lo que sea disponible</span></label>
+      </div>
+      <div class="error-msg" id="err-formato_cap">Seleccioná una opción.</div>
+    </div>
+
+    <div class="campo">
+      <label>En una escala del 1 al 5, ¿cómo evaluás tu relación actual con la Secretaría de Turismo? <span class="req">*</span></label>
+      <div class="hint">1 = Solo trámites o conflictos &nbsp;·&nbsp; 5 = Aliado estratégico</div>
+      <div class="escala-wrap">
+        <input class="escala-opcion" type="radio" name="relacion_municipio" id="rel1" value="1"><label class="escala-label" for="rel1">1</label>
+        <input class="escala-opcion" type="radio" name="relacion_municipio" id="rel2" value="2"><label class="escala-label" for="rel2">2</label>
+        <input class="escala-opcion" type="radio" name="relacion_municipio" id="rel3" value="3"><label class="escala-label" for="rel3">3</label>
+        <input class="escala-opcion" type="radio" name="relacion_municipio" id="rel4" value="4"><label class="escala-label" for="rel4">4</label>
+        <input class="escala-opcion" type="radio" name="relacion_municipio" id="rel5" value="5"><label class="escala-label" for="rel5">5</label>
+      </div>
+      <div class="escala-desc"><span>Solo trámites</span><span>Aliado estratégico</span></div>
+      <div class="error-msg" id="err-relacion_municipio">Seleccioná una opción.</div>
+    </div>
+    <div class="campo">
+      <label>¿Qué palabra describe mejor cómo te sentís al interactuar con el municipio? <span class="req">*</span></label>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="sentimiento_municipio" value="Escuchado/a"><span class="opcion-label">Escuchado/a</span></label>
+        <label class="opcion"><input type="radio" name="sentimiento_municipio" value="Apoyado/a"><span class="opcion-label">Apoyado/a</span></label>
+        <label class="opcion"><input type="radio" name="sentimiento_municipio" value="Ignorado/a"><span class="opcion-label">Ignorado/a</span></label>
+        <label class="opcion"><input type="radio" name="sentimiento_municipio" value="Controlado/a"><span class="opcion-label">Controlado/a</span></label>
+        <label class="opcion"><input type="radio" name="sentimiento_municipio" value="Frustrado/a"><span class="opcion-label">Frustrado/a</span></label>
+        <label class="opcion"><input type="radio" name="sentimiento_municipio" value="Indiferente"><span class="opcion-label">Indiferente — no tenemos mucho contacto</span></label>
+      </div>
+      <div class="error-msg" id="err-sentimiento_municipio">Seleccioná una opción.</div>
+    </div>
+    <div class="campo">
+      <label for="relacion_comentario">¿Por qué? ¿Hay algo concreto que te haya generado esa sensación? (opcional)</label>
+      <textarea id="relacion_comentario" placeholder="Tu comentario es confidencial y nos ayuda a mejorar…"></textarea>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="irA(4)">← Anterior</button>
+      <button class="btn btn-primary" onclick="irA(6)">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 6: DESAFÍOS Y CIERRE -->
+  <div class="seccion" id="sec-6">
+    <div class="seccion-label">Sección 6 de 6</div>
+    <div class="seccion-titulo">Desafíos y expectativas</div>
+    <div class="seccion-desc">Última sección. Queremos entender qué obstáculos enfrentás y qué acción concreta del municipio te ayudaría más.</div>
+
+    <div class="campo">
+      <label>¿Cuáles son los principales desafíos de tu establecimiento hoy? <span class="req">*</span></label>
+      <div class="hint">Podés elegir hasta 3.</div>
+      <div class="opciones">
+        <label class="opcion"><input type="checkbox" name="desafios" value="Baja ocupación en temporada baja"><span class="opcion-label">Baja ocupación en temporada baja</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Poca visibilidad online"><span class="opcion-label">Poca visibilidad online / dificultad para que los turistas me encuentren</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Dificultad para gestionar reservas"><span class="opcion-label">Dificultad para gestionar reservas</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Competencia desleal / informalidad"><span class="opcion-label">Competencia desleal de prestadores no habilitados</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Falta de personal calificado"><span class="opcion-label">Falta de personal calificado</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Problemas con trámites o habilitaciones"><span class="opcion-label">Dificultades con trámites o habilitaciones</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Falta de infraestructura o equipamiento"><span class="opcion-label">Falta de infraestructura o equipamiento</span></label>
+        <label class="opcion"><input type="checkbox" name="desafios" value="Acceso a financiamiento"><span class="opcion-label">Acceso a financiamiento o crédito</span></label>
+      </div>
+      <div class="error-msg" id="err-desafios">Seleccioná al menos una opción.</div>
+    </div>
+    <div class="campo">
+      <label for="accion_concreta">¿Qué acción concreta del municipio impactaría más en tu actividad? <span class="req">*</span></label>
+      <textarea id="accion_concreta" placeholder="Ej: Mejorar la señalética hacia mi establecimiento, organizar más eventos, etc."></textarea>
+      <div class="error-msg" id="err-accion_concreta">Por favor escribí al menos una idea.</div>
+    </div>
+    <div class="campo">
+      <label for="comentarios">¿Querés agregar algo más? (opcional)</label>
+      <textarea id="comentarios" placeholder="Comentarios, sugerencias, lo que quieras contarle a la Secretaría…"></textarea>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="irA(5)">← Anterior</button>
+      <button class="btn btn-primary" id="btn-enviar" onclick="enviarEncuesta()">Enviar encuesta →</button>
+    </div>
+    <div class="spinner-wrap" id="spinner"><div class="spinner"></div><div style="font-size:13px;color:var(--muted)">Enviando respuestas…</div></div>
+    <div class="envio-error" id="envio-error">Hubo un problema al enviar. Por favor intentá de nuevo o escribinos al WhatsApp de la Secretaría.</div>
+  </div>
+
+  <!-- CONFIRMACIÓN -->
+  <div class="seccion" id="sec-ok">
+    <div class="confirmacion">
+      <div class="check-circle">✓</div>
+      <h2>¡Gracias por tu respuesta!</h2>
+      <p>Recibimos los datos de <strong id="nombre-confirm"></strong>. Ya sos parte activa de la Red de Prestadores Turísticos Oficiales de Esquina.</p>
+      <div class="confirm-proximos">
+        <strong>En los próximos días la Secretaría de Turismo va a:</strong>
+        <ul>
+          <li>Confirmar los datos de tu ficha pública</li>
+          <li>Invitarte al próximo evento de la Red</li>
+          <li>Compartirte los resultados de esta encuesta</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Secretaría de Turismo · CEM · Municipio de Esquina · 2026</footer>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0jUGM08DSRbedAMgIfzwHB6qVisRHby9gQLdkZsekVu5RyrNBkqZWVmQDr3gk1xq-/exec';
+const TOTAL_SECCIONES = 6;
+let seccionActual = 0;
+
+function irA(n) {
+  if (n > 0 && n > seccionActual && !validarSeccion(seccionActual)) return;
+  const curId = 'sec-' + seccionActual;
+  document.getElementById(curId).classList.remove('active');
+  seccionActual = n;
+  const nextId = (n === 'ok') ? 'sec-ok' : 'sec-' + n;
+  document.getElementById(nextId).classList.add('active');
+  actualizarProgreso(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function actualizarProgreso(n) {
+  if (n === 0) { document.getElementById('progress-fill').style.width = '0%'; document.getElementById('progress-label').textContent = 'Bienvenida'; return; }
+  if (n === 'ok') { document.getElementById('progress-fill').style.width = '100%'; document.getElementById('progress-label').textContent = 'Completado'; return; }
+  document.getElementById('progress-fill').style.width = (n / TOTAL_SECCIONES * 100) + '%';
+  document.getElementById('progress-label').textContent = `Sección ${n} de ${TOTAL_SECCIONES}`;
+}
+
+document.querySelectorAll('.opcion input').forEach(input => {
+  input.addEventListener('change', () => {
+    if (input.type === 'radio') document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => r.closest('.opcion').classList.remove('selected'));
+    input.closest('.opcion').classList.toggle('selected', input.checked);
+  });
+});
+
+function validarSeccion(n) {
+  let ok = true;
+  const req = id => { const el = document.getElementById(id); const err = document.getElementById('err-'+id); if (!el||!el.value.trim()) { if(el) el.classList.add('error'); if(err) err.classList.add('visible'); ok=false; } else { if(el) el.classList.remove('error'); if(err) err.classList.remove('visible'); } };
+  const reqR = name => { const el = document.querySelector(`input[name="${name}"]:checked`); const err = document.getElementById('err-'+name); if(!el){if(err)err.classList.add('visible');ok=false;}else{if(err)err.classList.remove('visible');} };
+  const reqC = name => { const els = document.querySelectorAll(`input[name="${name}"]:checked`); const err = document.getElementById('err-'+name); if(els.length===0){if(err)err.classList.add('visible');ok=false;}else{if(err)err.classList.remove('visible');} };
+
+  if (n===1) ['nombre_establecimiento','tipo_establecimiento','nombre_responsable','telefono','direccion'].forEach(req);
+  if (n===2) { const p=document.getElementById('plazas'),ep=document.getElementById('err-plazas'); if(!p.value||isNaN(p.value)||p.value<1){p.classList.add('error');ep.classList.add('visible');ok=false;}else{p.classList.remove('error');ep.classList.remove('visible');} reqR('temporada'); }
+  if (n===3) { reqR('google_maps'); reqC('plataformas'); }
+  if (n===4) { reqC('falta_destino'); reqC('articulacion'); }
+  if (n===5) { reqC('capacitacion'); reqR('formato_cap'); reqR('relacion_municipio'); reqR('sentimiento_municipio'); }
+  if (n===6) { reqC('desafios'); req('accion_concreta'); }
+  return ok;
+}
+
+const gc = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i=>i.value).join(' | ');
+const gr = name => { const el=document.querySelector(`input[name="${name}"]:checked`); return el?el.value:''; };
+const gv = id => { const el=document.getElementById(id); return el?el.value.trim():''; };
+
+function recolectarDatos() {
+  return {
+    timestamp: new Date().toLocaleString('es-AR'),
+    nombre_establecimiento: gv('nombre_establecimiento'),
+    tipo_establecimiento: gv('tipo_establecimiento'),
+    nombre_responsable: gv('nombre_responsable'),
+    telefono: gv('telefono'),
+    email: gv('email'),
+    direccion: gv('direccion'),
+    plazas: gv('plazas'),
+    unidades: gv('unidades'),
+    temporada: gr('temporada'),
+    servicios: gc('servicios'),
+    precio_orientativo: gv('precio_orientativo'),
+    sitio_web: gv('sitio_web'),
+    instagram: gv('instagram'),
+    facebook: gv('facebook'),
+    google_maps: gr('google_maps'),
+    plataformas_reserva: gc('plataformas'),
+    falta_destino: gc('falta_destino'),
+    falta_destino_otro: gv('falta_destino_otro'),
+    articulacion: gc('articulacion'),
+    capacitacion: gc('capacitacion'),
+    formato_capacitacion: gr('formato_cap'),
+    relacion_municipio_puntaje: gr('relacion_municipio'),
+    sentimiento_municipio: gr('sentimiento_municipio'),
+    relacion_comentario: gv('relacion_comentario'),
+    desafios: gc('desafios'),
+    accion_concreta: gv('accion_concreta'),
+    comentarios: gv('comentarios'),
+  };
+}
+
+async function enviarEncuesta() {
+  if (!validarSeccion(6)) return;
+  const datos = recolectarDatos();
+  document.getElementById('btn-enviar').disabled = true;
+  document.getElementById('spinner').style.display = 'block';
+  document.getElementById('envio-error').style.display = 'none';
+  try {
+    await fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(datos) });
+    document.getElementById('nombre-confirm').textContent = datos.nombre_establecimiento;
+    irA('ok');
+  } catch(err) {
+    document.getElementById('envio-error').style.display = 'block';
+    document.getElementById('btn-enviar').disabled = false;
+  } finally {
+    document.getElementById('spinner').style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
