@@ -449,7 +449,18 @@
       <textarea id="comentarios" placeholder="Comentarios, sugerencias, lo que quieras contarle a la Secretaría…"></textarea>
     </div>
 
-    <div class="nav-btns">
+    <div class="campo">
+      <label>¿Autorizás al municipio a promocionar tu establecimiento desde sus canales oficiales? <span class="req">*</span></label>
+      <div class="hint">Incluye sitio web municipal, redes sociales oficiales, oficinas de turismo y participación en ferias.</div>
+      <div class="opciones">
+        <label class="opcion"><input type="radio" name="autorizacion_promocion" value="Sí, cuando quieran"><span class="opcion-label">Sí, pueden hacerlo cuando quieran</span></label>
+        <label class="opcion"><input type="radio" name="autorizacion_promocion" value="Sí, pero consultenme antes"><span class="opcion-label">Sí, pero consúltenme antes de cada publicación</span></label>
+        <label class="opcion"><input type="radio" name="autorizacion_promocion" value="No"><span class="opcion-label">No por ahora</span></label>
+      </div>
+      <div class="error-msg" id="err-autorizacion_promocion">Seleccioná una opción.</div>
+    </div>
+
+        <div class="nav-btns">
       <button class="btn btn-secondary" onclick="irA(5)">← Anterior</button>
       <button class="btn btn-primary" id="btn-enviar" onclick="enviarEncuesta()">Enviar encuesta →</button>
     </div>
@@ -519,7 +530,7 @@ function validarSeccion(n) {
   if (n===3) { reqR('google_maps'); reqC('plataformas'); }
   if (n===4) { reqC('falta_destino'); reqC('articulacion'); }
   if (n===5) { reqC('capacitacion'); reqR('formato_cap'); reqR('relacion_municipio'); reqR('sentimiento_municipio'); }
-  if (n===6) { reqC('desafios'); req('accion_concreta'); }
+  if (n===6) { reqC('desafios'); req('accion_concreta'); reqR('autorizacion_promocion'); }
   return ok;
 }
 
@@ -557,6 +568,7 @@ function recolectarDatos() {
     desafios: gc('desafios'),
     accion_concreta: gv('accion_concreta'),
     comentarios: gv('comentarios'),
+    autorizacion_promocion: gr('autorizacion_promocion'),
   };
 }
 
